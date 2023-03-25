@@ -1,12 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:planner_app/Customs/TodoCard.dart';
 import 'package:planner_app/Service/Auth_Service.dart';
 import 'package:planner_app/pages/AddToDo.dart';
 import 'package:intl/intl.dart';
 import 'package:planner_app/pages/ChatmeGpt.dart';
 import 'package:planner_app/pages/SignUPPage.dart';
+import 'package:planner_app/pages/meet.dart';
 import 'package:planner_app/pages/profilepage.dart';
 import 'package:planner_app/pages/view_page.dart';
 
@@ -145,9 +147,17 @@ class _HomePageState extends State<HomePage> {
             label: '',
           ),
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.meeting_room,
-              color: Colors.white,
+            icon: InkWell(
+              onTap: () {
+                webViewMethodForMic();
+                WebViewMethodForCamera();
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (builder) => MeetingPage()));
+              },
+              child: Icon(
+                Icons.meeting_room,
+                color: Colors.white,
+              ),
             ),
             backgroundColor: Colors.white,
             label: '',
@@ -265,6 +275,20 @@ class _HomePageState extends State<HomePage> {
         return alert;
       },
     );
+  }
+
+  Future webViewMethodForMic() async {
+    print('In Microphone permission method');
+    //WidgetsFlutterBinding.ensureInitialized();
+
+    await Permission.microphone.request();
+    WebViewMethodForCamera();
+  }
+
+  Future WebViewMethodForCamera() async {
+    print('In Camera permission method');
+    //WidgetsFlutterBinding.ensureInitialized();
+    await Permission.camera.request();
   }
 }
 
